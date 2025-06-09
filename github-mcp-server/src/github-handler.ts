@@ -149,9 +149,9 @@ app.get("/authorize", async (c) => {
     return renderApprovalDialog(c.req.raw, {
       client,
       server: {
-        name: "Cloudflare GitHub MCP Server",
-        logo: "https://avatars.githubusercontent.com/u/314135?s=200&v=4",
-        description: "This is a demo MCP Remote Server using GitHub for authentication.",
+        name: "RUN:REBEL GitHub MCP Server",
+        logo: "https://cdn.prod.website-files.com/6840a8cbeee0807808f4045c/68416791e028146aa1b9e8f0_logo-inline-white.png",
+        description: "This is a RUN:REBEL Github MCP Remote Server authentication.",
       },
       state: { oauthReqInfo },
     });

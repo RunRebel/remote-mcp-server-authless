@@ -11,9 +11,9 @@
 		"nodejs_compat"
 	],
 	"vars": {
-		"GITHUB_CLIENT_ID": "Ov23lin8wkaaKs60rOwG",
-		"GITHUB_CLIENT_SECRET": "bf7edad7f44ee0ea48f0d743e6c517e849c49cf2",
-		"COOKIE_ENCRYPTION_KEY": "5d29f9b88effff145d23d3a491567c30485feb1adea31ebf07958c15e52a5869"
+		"GITHUB_CLIENT_ID": "Ov23lin8wkaaKs60rOwG", 
+		"GITHUB_CLIENT_SECRET": "bf7edad7f44ee0ea48f0d743e6c517e849c49cf2", //cambiar en PRO
+		"COOKIE_ENCRYPTION_KEY": "5d29f9b88effff145d23d3a491567c30485feb1adea31ebf07958c15e52a5869" //cambiar en PRO
 	},
 	"migrations": [
 		{
