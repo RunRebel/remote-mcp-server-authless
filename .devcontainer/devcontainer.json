@@ -1,0 +1,15 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+
+  "features": {
+    // Go 1.22 (cambia versión si quieres)
+    "ghcr.io/devcontainers/features/go:1": { "version": "1.22" }
+  },
+
+  "postCreateCommand": [
+    // Flyctl
+    "curl -L https://fly.io/install.sh | sh",
+    // Wrangler (Cloudflare)
+    "npm install -g wrangler"
+  ]
+}

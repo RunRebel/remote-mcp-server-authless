@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "github-mcp-server",
+	"name": "shared-github-mcp-server-1",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-10",
 	"compatibility_flags": [
@@ -13,7 +13,7 @@
 	"vars": {
 		"GITHUB_CLIENT_ID": "Ov23lin8wkaaKs60rOwG",
 		"GITHUB_CLIENT_SECRET": "bf7edad7f44ee0ea48f0d743e6c517e849c49cf2",
-		"COOKIE_ENCRYPTION_KEY": "1234567890"
+		"COOKIE_ENCRYPTION_KEY": "5d29f9b88effff145d23d3a491567c30485feb1adea31ebf07958c15e52a5869"
 	},
 	"migrations": [
 		{
@@ -34,7 +34,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "OAUTH_KV",
-			"id": "6f8ff1a3034c4286b96fbe588c0a1362"
+			"id": "56e6c4086dae474aa3e0e9574aa3813c"
 		}
 	],
 	"ai": {

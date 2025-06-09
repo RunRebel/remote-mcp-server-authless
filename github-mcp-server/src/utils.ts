@@ -1,3 +1,13 @@
+// Tipos para las respuestas de GitHub OAuth
+interface GitHubTokenResponse {
+  access_token?: string;
+  token_type?: string;
+  scope?: string;
+  error?: string;
+  error_description?: string;
+  error_uri?: string;
+}
+
 /**
  * Constructs an authorization URL for an upstream service.
  *
@@ -52,31 +62,61 @@ export async function fetchUpstreamAuthToken({
 }: {
   code: string | undefined;
   upstream_url: string;
+  client_id: string;
   client_secret: string;
   redirect_uri: string;
-  client_id: string;
 }): Promise<[string, null] | [null, Response]> {
   if (!code) {
     return [null, new Response("Missing code", { status: 400 })];
   }
 
-  const resp = await fetch(upstream_url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({ client_id, client_secret, code, redirect_uri }).toString(),
-  });
-  if (!resp.ok) {
-    console.log(await resp.text());
-    return [null, new Response("Failed to fetch access token", { status: 500 })];
+  try {
+    const resp = await fetch(upstream_url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json", // Importante para GitHub
+      },
+      body: new URLSearchParams({ 
+        client_id, 
+        client_secret, 
+        code, 
+        redirect_uri 
+      }).toString(),
+    });
+    
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error(`GitHub token exchange failed (${resp.status}):`, errorText);
+      return [null, new Response(`Failed to exchange token: ${resp.status}`, { status: 500 })];
+    }
+    
+    // GitHub puede devolver JSON o form-encoded
+    const contentType = resp.headers.get('content-type');
+    let accessToken: string | null = null;
+    
+    if (contentType?.includes('application/json')) {
+      const data = await resp.json() as GitHubTokenResponse;
+      if (data.error) {
+        console.error("GitHub OAuth error:", data);
+        return [null, new Response(`GitHub error: ${data.error_description || data.error}`, { status: 400 })];
+      }
+      accessToken = data.access_token || null;
+    } else {
+      // Form-encoded response
+      const body = await resp.formData();
+      accessToken = body.get("access_token") as string;
+    }
+    
+    if (!accessToken) {
+      return [null, new Response("Missing access token in response", { status: 400 })];
+    }
+    
+    return [accessToken, null];
+  } catch (error) {
+    console.error("Error in fetchUpstreamAuthToken:", error);
+    return [null, new Response("Failed to exchange token", { status: 500 })];
   }
-  const body = await resp.formData();
-  const accessToken = body.get("access_token") as string;
-  if (!accessToken) {
-    return [null, new Response("Missing access token", { status: 400 })];
-  }
-  return [accessToken, null];
 }
 
 // Context from the auth process, encrypted & stored in the auth token
@@ -86,4 +126,11 @@ export type Props = {
   name: string;
   email: string;
   accessToken: string;
+  tokenCreatedAt?: number;      // Timestamp de creación del token
+  isCustomApp?: boolean;         // Si usa app custom de GitHub
+  rateLimit?: {                  // Info de rate limits
+    remaining: number;
+    limit: number;
+    reset: number;
+  };
 };
